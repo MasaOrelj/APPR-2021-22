@@ -21,7 +21,7 @@ Stolpci: država, leto, spol, lokacija, odstotek sodelujočih v turizmu, števil
 * `2. tabela` : Vsebuje podatke o potrošnji v turizmu. 
 Stolpci: država, leto, lokacija, skupna potošnja (v tisoč evrih), povprečna cena na noč(v evrih).
 
-*`3. tabela` : Vsbuje podatke o stopnji izobrazbe.
+* `3. tabela` : Vsbuje podatke o stopnji izobrazbe.
 Stolpci: država, leto, stopnja izobrazbe, spol, odstotek populacije.
 
 Vhodne podatke za naštete tabele bom pridobila iz CSV datotek.
