@@ -1,10 +1,10 @@
-# Analiza podatkov s programom R - 2021/22
+# Analiza potovanj v Evropski uniji
 
 Vzorčni repozitorij za projekt pri predmetu APPR v študijskem letu 2021/22. 
 
 ## Tematika
 
-V moji projektni nalogi se bom posvetila analizi turizma v državah Evropske unije 
+V moji projektni nalogi se bom posvetila analizi turizma(natančneje potovanj) v državah Evropske unije 
 in ga primerjala s stopnjo izobrazbe. Naloge se bom lotila tako, da bom za začetek analizirala
 odstotek ljudi, ki so v zadnjem letu potovali in pa število potovanj. Nato se bom posvetila potrošnji
 posameznih držav v turizmu, na koncu pa bom dobljene rezultate primerjala s stopnjo izobrazbe prebivalstva.
@@ -13,7 +13,18 @@ posameznih držav v turizmu, na koncu pa bom dobljene rezultate primerjala s sto
 Podatke bom črpala iz [Eurostata](https://ec.europa.eu/eurostat/web/main/home).
 
 ## Tabele
+Podatke bom zbrala v treh tabelah:
+* `1. tabela` : Vsebuje podatke o sodelovanju prebivalcev držav Evropske unije v turizmu. 
+Stolpci: država, leto, spol, lokacija, odstotek sodelujočih v turizmu, število izletov.
+(Lokacija se bo delila le na turizem v tujini in domači turizem.)
 
+* `2. tabela` : Vsebuje podatke o potrošnji v turizmu. 
+Stolpci: država, leto, lokacija, skupna potošnja (v tisoč evrih), povprečna cena na noč(v evrih).
+
+*`3. tabela` : Vsbuje podatke o stopnji izobrazbe.
+Stolpci: država, leto, stopnja izobrazbe, spol, odstotek populacije.
+
+Vhodne podatke za naštete tabele bom pridobila iz CSV datotek.
 
 ## Program
 
