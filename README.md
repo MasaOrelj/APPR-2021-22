@@ -4,8 +4,16 @@ Vzorčni repozitorij za projekt pri predmetu APPR v študijskem letu 2021/22.
 
 ## Tematika
 
-Poskus commita Izbrali si boste temo, s katero se bo vaš projekt ukvarjal.
-Tukaj boste napisali, kje ste dobili podatke, ter kakšen je vaš cilj.
+V moji projektni nalogi se bom posvetila analizi turizma v državah Evropske unije 
+in ga primerjala s stopnjo izobrazbe. Naloge se bom lotila tako, da bom za začetek analizirala
+odstotek ljudi, ki so v zadnjem letu potovali in pa število potovanj. Nato se bom posvetila potrošnji
+posameznih držav v turizmu, na koncu pa bom dobljene rezultate primerjala s stopnjo izobrazbe prebivalstva.
+
+## Vir podatkov
+Podatke bom črpala iz [Eurostata](https://ec.europa.eu/eurostat/web/main/home).
+
+## Tabele
+
 
 ## Program
 
