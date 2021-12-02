@@ -1,10 +1,10 @@
-# Analiza potovanj v Evropski uniji
+# Analiza turizma v Evropski uniji
 
 Vzorčni repozitorij za projekt pri predmetu APPR v študijskem letu 2021/22. 
 
 ## Tematika
 
-V moji projektni nalogi se bom posvetila analizi turizma (natančneje potovanj) v državah Evropske unije 
+V moji projektni nalogi se bom posvetila analizi turizma v državah Evropske unije 
 in ga primerjala s stopnjo izobrazbe. Naloge se bom lotila tako, da bom za začetek analizirala
 odstotek ljudi, ki so v zadnjem letu potovali in pa število potovanj. Nato se bom posvetila potrošnji
 posameznih držav v turizmu, na koncu pa bom dobljene rezultate primerjala s stopnjo izobrazbe prebivalstva.
