@@ -95,21 +95,26 @@ diagram.obrisi = function(k.obrisi) {
       color = "blue"
     ) +
     xlab("število skupin (k)") +
-    ylab("obrisi (povprečje obrisov)") +
+    ylab("Obrisi (povprečje obrisov)") +
     ggtitle(paste("Maksimalno povprečje obrisov pri k =", obrisi.k(k.obrisi))) +
     theme_classic()
 }
+
+
 
 sodelovanje = tabela_izobrazba_sodelovanje %>% 
   filter(
     Leto == 2020,
     Spol == "Total",
-  ) %>% dplyr::select(Drzava, Odstotek.sodelujocih.znotraj.drzave, Odstotek.sodelujocih.izven.drzave, Odstotek.vseh.sodelujocih)
+  ) %>% dplyr::select(Drzava, Odstotek.sodelujocih.znotraj.drzave, Odstotek.sodelujocih.izven.drzave.)
+
+
+
 
 
 #dendrogram, hierarhično razvrščanje v skupine
 Drzave = sodelovanje$Drzava %>% unlist()
-razdalje = sodelovanje$Odstotek.vseh.sodelujocih %>% dist()
+razdalje = sodelovanje[,2:3] %>% dist()
 dendrogram = razdalje %>% hclust(method = "ward.D")
 
 hc.kolena = function(dendrogram, od = 1, do = NULL, eps = 0.5) {
@@ -152,6 +157,18 @@ hc.kolena.k = function(k.visina) {
 # izračunamo tabelo s koleni za dendrogram
 r = hc.kolena(dendrogram)
 
+sodelovanje_obrnjena <- data.frame(t(sodelovanje[-1]))
+colnames(sodelovanje_obrnjena) <- Drzave
+razdalje2 <- sodelovanje_obrnjena[,-1] %>% dist()
+dendogram2 <- razdalje2 %>% hclust(method = "ward.D")
+
+hierarhično_razvrščanje <- plot(
+  dendrogram2,
+  labels = Drzave,
+  ylab = "višina",
+  main = NULL
+)
+
 diagram.kolena = function(k.visina) {
   k.visina %>% ggplot() +
     geom_point(
@@ -169,9 +186,10 @@ diagram.kolena = function(k.visina) {
     ) +
     ggtitle(paste("Kolena:", paste(hc.kolena.k(k.visina), collapse = ", "))) +
     xlab("število skupin (k)") +
-    ylab("razdalja pri združevanju skupin") +
+    ylab("Razdalja pri združevanju skupin") +
     theme_classic()
 }
+
 diagram.kolena(r)
 
 diagram.skupine = function(podatki, oznake, skupine, k) {
@@ -198,6 +216,22 @@ diagram.skupine = function(podatki, oznake, skupine, k) {
   }
   d
 }
+
+b <- transform(sodelovanje, Znotraj= as.numeric(unlist(sodelovanje[,2])), 
+               Izven = as.numeric(unlist(sodelovanje[,3]))) %>%
+               dplyr::select(Znotraj, Izven)
+skupine = b[, -1] %>%
+  kmeans(centers = 3) %>%
+  getElement("cluster") %>%
+  as.ordered()
+
+print(skupine)
+
+r.hc = sodelovanje[, -1] %>% obrisi(hc = TRUE)
+r.km = sodelovanje[, -1] %>% obrisi(hc = FALSE)
+
+diagram.obrisi(r.hc)
+diagram.obrisi(r.km)
 
 
 
