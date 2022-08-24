@@ -224,6 +224,77 @@ graf9
 
 #Zemljevid odstotka sodelujočih v turizmu v državah EU leta 2020
 
+library(rgdal)
+library(rgeos)
+library(raster)
+library(tmap)
+library(sp)
+library(sf)
+library(rnaturalearth)
+library(rnaturalearthdata)
+
+source("lib/uvozi.zemljevid.r", encoding="UTF-8")
+
+Data(World) 
+Europe <- World %>% filter(continent == "Europe")
+
+lvls <- (Europe$name)
+
+tabela_zemljevid <- tabela_izobrazba_sodelovanje %>% filter(Spol == "Total", Leto =="2020")
+tabela_zemljevid <- tabela_zemljevid[c(2,6,1,3,4,5,7,8,9)]
+tabela_zemljevid <- tabela_zemljevid[,1:2]
+tabela_zemljevid$Drzava[tabela_zemljevid$Drzava =="Czechia"] = "Czech Rep."
+primerjava <- data.frame(Drzava = lvls) %>% left_join(tabela_zemljevid, by = "Drzava")
+manjkajoci <- primerjava[is.na(primerjava$Odstotek.vseh.sodelujocih), ]
+
+
+df = data.frame(drzava = manjkajoci$Drzava, Drzava = c(  "Albania", 
+                                                         
+                                                         "Bosnia and Herz.",
+                                                         "Belarus",
+                                                         "Switzerland",
+                                                         "United Kingdom",
+                                                         "Iceland",
+                                                         "Kosovo",
+                                                         "Moldova",
+                                                         "Macedonia",
+                                                         "Montenegro",
+                                                         "Norway",
+                                                         "Russia",
+                                                         "Serbia",
+                                                         "Ukraine"
+                                                         ))
+
+
+
+tabela_zemljevid <- tabela_zemljevid %>% left_join(df) %>% mutate(Drzava=ifelse(is.na(drzava), Drzava, drzava))
+tabela_zemljevid <- tabela_zemljevid[,1:2]
+podatki <- merge(Europe, tabela_zemljevid, by.x = "name", by.y = "Drzava")
+
+
+tmap_mode("view")
+z2 <- tm_shape(podatki) + tm_polygons("Odstotek.vseh.sodelujocih", popup.vars=c("Odstotek: " = "Odstotek.vseh.sodelujocih"))
+
+
+
+zemljevid <- podatki %>% ggplot() +
+  geom_sf() +
+  coord_sf(xlim = c(-25,50), ylim = c(35,70), expand = FALSE) +
+  aes(fill = Odstotek.vseh.sodelujocih) +
+  scale_fill_gradient(low="pink", high="magenta") +
+  ggtitle('Katera država v EU najbolj sodeluje v turizmu?') +
+  labs(fill = "Odstotek sodelujočih v turizmu leta 2020")+
+  theme_classic() +
+  theme(
+    axis.ticks = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank()
+  )+
+  geom_sf_text(aes(label = name), color = "black", size = 2)
+
+
+
+
 
 
 
