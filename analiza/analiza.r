@@ -1,24 +1,36 @@
 # 4. faza: Napredna analiza podatkov
 
-library(ggplot2)
-
+library(knitr)
+library(rvest)
+library(gsubfn)
+library(tidyr)
+library(tmap)
+library(shiny)
 library(readr)
 library(dplyr)
-library(tidyr)
-library(tidyverse)
-library(plyr)
 library(tibble)
 library(stringr)
+library(ggplot2)
+library(wesanderson)
+library(cluster)
+library(ggalt)
+library(sp)
+library(rgdal)
+library(raster)
+library(rgeos)
+library(maptools)
+library(mapproj)
+library(gridExtra)
+options(gsubfn.engine="R")
+
+
+
+library(tidyverse)
+library(plyr)
 library(xml2)
-library(rvest)
 library(plotly)
 
-library(cluster)
-library(rgdal)
-library(rgeos)
-library(raster)
 library(tmap)
-library(sp)
 library(sf)
 library(rnaturalearth)
 library(rnaturalearthdata)
@@ -106,9 +118,8 @@ sodelovanje = tabela_izobrazba_sodelovanje %>%
   filter(
     Leto == 2020,
     Spol == "Total",
-  ) %>% dplyr::select(Drzava, Odstotek.sodelujocih.znotraj.drzave, Odstotek.sodelujocih.izven.drzave.)
-
-
+  ) %>% dplyr::select(-Leto, -Spol)
+sodelovanje <- sodelovanje[,1:3]
 
 
 
@@ -157,13 +168,9 @@ hc.kolena.k = function(k.visina) {
 # izračunamo tabelo s koleni za dendrogram
 r = hc.kolena(dendrogram)
 
-sodelovanje_obrnjena <- data.frame(t(sodelovanje[-1]))
-colnames(sodelovanje_obrnjena) <- Drzave
-razdalje2 <- sodelovanje_obrnjena[,-1] %>% dist()
-dendogram2 <- razdalje2 %>% hclust(method = "ward.D")
 
 hierarhično_razvrščanje <- plot(
-  dendrogram2,
+  dendrogram,
   labels = Drzave,
   ylab = "višina",
   main = NULL
@@ -220,6 +227,7 @@ diagram.skupine = function(podatki, oznake, skupine, k) {
 b <- transform(sodelovanje, Znotraj= as.numeric(unlist(sodelovanje[,2])), 
                Izven = as.numeric(unlist(sodelovanje[,3]))) %>%
                dplyr::select(Znotraj, Izven)
+
 skupine = b[, -1] %>%
   kmeans(centers = 3) %>%
   getElement("cluster") %>%
@@ -227,15 +235,41 @@ skupine = b[, -1] %>%
 
 print(skupine)
 
-r.hc = sodelovanje[, -1] %>% obrisi(hc = TRUE)
-r.km = sodelovanje[, -1] %>% obrisi(hc = FALSE)
+r.hc = sodelovanje[, 2:3] %>% obrisi(hc = TRUE)
+r.km = sodelovanje[, 2:3] %>% obrisi(hc = FALSE)
 
 diagram.obrisi(r.hc)
 diagram.obrisi(r.km)
 
+#Optimalno število skupin je torej 2 ali 4/5.
 
+drzave.x.y =
+  as_tibble(razdalje %>% cmdscale(k = 2)) %>%
+  bind_cols(Drzave) %>%
+  dplyr::select(drzava = ...3, x = V1, y = V2)
 
+k = obrisi.k(r.hc)
+skupine = sodelovanje[, -1] %>%
+  dist() %>%
+  hclust(method = "ward.D") %>%
+  cutree(k = k) %>%
+  as.ordered()
+diagram.skupine(drzave.x.y, drzave.x.y$drzava, skupine, k)
 
+k = obrisi.k(r.km)
+set.seed(42) # ne pozabimo na ponovljivost rezultatov
+skupine = sodelovanje[, -1] %>%
+  kmeans(centers = k) %>%
+  getElement("cluster") %>%
+  as.ordered()
+diagram.skupine(drzave.x.y, drzave.x.y$drzava, skupine, k)
+
+set.seed(42)
+skupine = sodelovanje[, -1] %>%
+  kmeans(centers = 4) %>%
+  getElement("cluster") %>%
+  as.ordered()
+skup <- diagram.skupine(drzave.x.y, drzave.x.y$drzava, skupine, 2)
 
 
 
