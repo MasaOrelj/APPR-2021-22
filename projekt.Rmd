@@ -17,10 +17,9 @@ knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE)
 source("lib/libraries.r", encoding="UTF-8")
 ```
 
-
 ## Izbira teme
 
-***
+Za projekt sem si izbrala temo **Analiza turizma v Evropski Uniji**. 
 
 ## Obdelava, uvoz in čiščenje podatkov
 
