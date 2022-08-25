@@ -21,7 +21,7 @@ tabela_izobrazba <- tabela_izobrazba %>%
       str_replace_all(Stolpec, "primary,", "primary-")
   ) %>%
   separate(col = Stolpec, into = c("Leto","Drzava", "Spol", "Starost", "Odstotek", "Stopnja.izobrazbe","Vrednost"), sep = ",", convert = FALSE) %>%
-  select(-"Starost", -"Odstotek") %>%
+  dplyr::select(-"Starost", -"Odstotek") %>%
   mutate_all(str_replace_all, '"', '') %>%
   mutate(Vrednost = parse_number(Vrednost), Leto = parse_number(Leto))
  
@@ -34,7 +34,7 @@ tabela_sodelovanje <- read_csv(
   locale = locale(encoding = "Windows-1250"),
   col_types = cols(
     .default = col_guess()),
-  col_names = c("Leto", "Drzava", "Enota", "Trajanje", "Lokacija", "Spol", "Stevilo.sodelujocih")) %>% select(-"Trajanje", -8)
+  col_names = c("Leto", "Drzava", "Enota", "Trajanje", "Lokacija", "Spol", "Stevilo.sodelujocih")) %>% dplyr::select(-"Trajanje", -8)
 
 
 tabela_stevilo_potovanj <- read_csv(
@@ -43,7 +43,7 @@ tabela_stevilo_potovanj <- read_csv(
   locale = locale(encoding = "Windows-1250"),
   col_types = cols(
     .default = col_guess()),
-  col_names = c("Leto", "Drzava", "Enota", "Namen", "Trajanje", "Lokacija", "Stevilo.potovanj")) %>% select(-"Enota", -"Trajanje", -8)
+  col_names = c("Leto", "Drzava", "Enota", "Namen", "Trajanje", "Lokacija", "Stevilo.potovanj")) %>% dplyr::select(-"Enota", -"Trajanje", -8)
 
 tabela_potrosnja <- read_csv(
   "podatki/potrosnja.csv",
@@ -51,7 +51,7 @@ tabela_potrosnja <- read_csv(
   locale = locale(encoding = "Windows-1250"),
   col_types = cols(
     .default = col_guess()),
-  col_names = c("Leto", "Drzava", "Enota", "Namen", "Trajanje", "Lokacija", "Nastanitev", "Nocitev/Potovanje", "Povprecna.potrosnja")) %>% select(-"Enota", -"Trajanje", -"Nastanitev")
+  col_names = c("Leto", "Drzava", "Enota", "Namen", "Trajanje", "Lokacija", "Nastanitev", "Nocitev/Potovanje", "Povprecna.potrosnja")) %>% dplyr::select(-"Enota", -"Trajanje", -"Nastanitev")
 
 
 link <- "https://en.wikipedia.org/wiki/List_of_European_countries_by_average_wage"
@@ -116,7 +116,7 @@ tabela_potrosnja_izleti <- tabela_potrosnja_izleti %>% mutate("Skupaj" =  tabela
 
 stolpec_potrosnja <- tabela_potrosnja_izleti[["Skupaj"]]
 
-tabela_potrosnja_izleti <- tabela_potrosnja_izleti %>% select(-"Skupaj")
+tabela_potrosnja_izleti <- tabela_potrosnja_izleti %>% dplyr::select(-"Skupaj")
 tabela_potrosnja_izleti <- cbind(tabela_potrosnja_izleti, stolpec_potrosnja)
 
 colnames(tabela_potrosnja_izleti) <- c("Leto", "Drzava", "Namen", "Lokacija", "Stevilo.potovanj", "Povprecna.potrosnja.na.izlet", "Povprecna.potrosnja.na.noc", "Skupna.potrosnja")
@@ -142,20 +142,20 @@ izobrazba_stolpec1 <- izobrazba_stolpec[seq(1, nrow(izobrazba_stolpec),3),]
 izobrazba_stolpec2 <- izobrazba_stolpec[seq(2, nrow(izobrazba_stolpec),3),]
 izobrazba_stolpec3 <- izobrazba_stolpec[seq(3, nrow(izobrazba_stolpec),3),]
 
-tabela_izobrazba2 <- tabela_izobrazba %>% select(-"Stopnja.izobrazbe", -"Vrednost") %>% filter(row_number() %% 3 == 1)
+tabela_izobrazba2 <- tabela_izobrazba %>% dplyr::select(-"Stopnja.izobrazbe", -"Vrednost") %>% filter(row_number() %% 3 == 1)
 tabela_izobrazba2 <- cbind(tabela_izobrazba2, izobrazba_stolpec1, izobrazba_stolpec2, izobrazba_stolpec3)
 colnames(tabela_izobrazba2)[4:6] <- c("Less.than.primary.primary.and.lower.secondary.education", "Upper.secondary.and.post-secondary.non-tertiary.education", "Tertiary.education")
 
 
 tabela_sodelovanje2 <- tabela_sodelovanje[!grepl("Number", tabela_sodelovanje$Enota),]
-tabela_sodelovanje2 <- tabela_sodelovanje2 %>% select(-"Enota")
+tabela_sodelovanje2 <- tabela_sodelovanje2 %>% dplyr::select(-"Enota")
 colnames(tabela_sodelovanje2)[5] <- "Odstotek.sodelujocih"
 
 tabela_domestic <- tabela_sodelovanje2[!grepl("All.countries.of.the.world", tabela_sodelovanje2$Lokacija),]
-tabela_domestic <- tabela_domestic %>% select(-"Lokacija")
+tabela_domestic <- tabela_domestic %>% dplyr::select(-"Lokacija")
 
 tabela_all_countries <- tabela_sodelovanje2[!grepl("Domestic", tabela_sodelovanje2$Lokacija),]
-tabela_all_countries <- tabela_all_countries %>% select(-"Lokacija")
+tabela_all_countries <- tabela_all_countries %>% dplyr::select(-"Lokacija")
 
 tabela_izobrazba_sodelovanje <- tabela_domestic %>%
   left_join(tabela_all_countries, by = c("Drzava", "Leto", "Spol"))
@@ -181,19 +181,19 @@ pomozna <- tibble(Drzava = c(
   "Slovakia", "Slovenia", "Spain", "Sweden")
 )
 
-pomozna_potrosnja_1 <- tabela_potrosnja_izleti %>% select(c("Leto", "Drzava", "Namen", "Lokacija","Povprecna.potrosnja.na.izlet", "Povprecna.potrosnja.na.noc")) %>%
+pomozna_potrosnja_1 <- tabela_potrosnja_izleti %>% dplyr::select(c("Leto", "Drzava", "Namen", "Lokacija","Povprecna.potrosnja.na.izlet", "Povprecna.potrosnja.na.noc")) %>%
   filter(Namen == "Personal reasons")
 
-pomozna_potrosnja_2 <- tabela_potrosnja_izleti %>% select(c("Leto", "Drzava","Namen", "Lokacija", "Povprecna.potrosnja.na.izlet", "Povprecna.potrosnja.na.noc")) %>%
+pomozna_potrosnja_2 <- tabela_potrosnja_izleti %>% dplyr::select(c("Leto", "Drzava","Namen", "Lokacija", "Povprecna.potrosnja.na.izlet", "Povprecna.potrosnja.na.noc")) %>%
   filter(Namen == "Professional, business")
 
-tabela_potrosnja_1 <- pomozna_potrosnja_1 %>% select("Leto", "Drzava", "Lokacija")
+tabela_potrosnja_1 <- pomozna_potrosnja_1 %>% dplyr::select("Leto", "Drzava", "Lokacija")
 tabela_potrosnja_1$Potrosnja.izlet <- ((pomozna_potrosnja_1$Povprecna.potrosnja.na.izlet + pomozna_potrosnja_2$Povprecna.potrosnja.na.izlet)/2)
 tabela_potrosnja_1$Potorsnja.noc <- ((pomozna_potrosnja_1$Povprecna.potrosnja.na.noc + pomozna_potrosnja_2$Povprecna.potrosnja.na.noc)/2)
 
 pomozna_potrosnja_3 <- tabela_potrosnja_1 %>% filter(Lokacija == "Domestic country")
 pomozna_potrosnja_4 <- tabela_potrosnja_1 %>% filter(Lokacija == "Outbound")
-tabela_potrosnja_1 <- pomozna_potrosnja_3 %>% select("Leto","Drzava") 
+tabela_potrosnja_1 <- pomozna_potrosnja_3 %>% dplyr::select("Leto","Drzava") 
 tabela_potrosnja_1$Potrosnja.na.izlet <- ((pomozna_potrosnja_3$Potrosnja.izlet + pomozna_potrosnja_4$Potrosnja.izlet)/2) 
 tabela_potrosnja_1$Potrosnja.na.noc <- ((pomozna_potrosnja_3$Potorsnja.noc + pomozna_potrosnja_4$Potorsnja.noc)/2)
 
