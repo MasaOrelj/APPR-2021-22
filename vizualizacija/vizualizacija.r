@@ -1,18 +1,5 @@
 # 3. faza: Vizualizacija podatkov
 
-library(ggplot2)
-
-library(readr)
-library(dplyr)
-library(tidyr)
-library(tidyverse)
-library(plyr)
-library(tibble)
-library(stringr)
-library(xml2)
-library(rvest)
-library(plotly)
-
 #Sodelovanje v turizmu med visoko izobraženimi državami glede na spol
 
 Visoka.izobrazba <- tabela_izobrazba_sodelovanje %>%
@@ -176,7 +163,7 @@ graf7 = Potovanja.Skupaj %>%
   geom_line(color='light blue', arrow = arrow(angle = 20), size=2)+
   geom_point(size = 2, color='blue')
 
-graf7
+ggplotly(graf7)
 
 #Povezava med povprečno neto plačo in potrošnjo v turizmu v EU
 tabela_place_potrosnja <- na.omit(tabela_place_potrosnja)

@@ -1,40 +1,5 @@
 # 4. faza: Napredna analiza podatkov
 
-library(knitr)
-library(rvest)
-library(gsubfn)
-library(tidyr)
-library(tmap)
-library(shiny)
-library(readr)
-library(dplyr)
-library(tibble)
-library(stringr)
-library(ggplot2)
-library(wesanderson)
-library(cluster)
-library(ggalt)
-library(sp)
-library(rgdal)
-library(raster)
-library(rgeos)
-library(maptools)
-library(mapproj)
-library(gridExtra)
-options(gsubfn.engine="R")
-
-
-
-library(tidyverse)
-library(plyr)
-library(xml2)
-library(plotly)
-
-library(tmap)
-library(sf)
-library(rnaturalearth)
-library(rnaturalearthdata)
-
 
 obrisi = function(podatki, hc = TRUE, od = 2, do = NULL) {
   n = nrow(podatki)
@@ -70,7 +35,7 @@ obrisi = function(podatki, hc = TRUE, od = 2, do = NULL) {
 obrisi.povprecje = function(k.obrisi) {
   k.obrisi.povprecje = k.obrisi %>%
     group_by(k) %>%
-    summarize(obrisi = mean(obrisi))
+    mutate(obrisi = mean(obrisi))
 }
 
 obrisi.k = function(k.obrisi) {
@@ -266,15 +231,180 @@ diagram.skupine(drzave.x.y, drzave.x.y$drzava, skupine, k)
 
 set.seed(42)
 skupine = sodelovanje[, -1] %>%
-  kmeans(centers = 4) %>%
+  kmeans(centers = 5) %>%
   getElement("cluster") %>%
   as.ordered()
-skup <- diagram.skupine(drzave.x.y, drzave.x.y$drzava, skupine, 2)
+skup <- diagram.skupine(drzave.x.y, drzave.x.y$drzava, skupine, 5)
+skup
+
+
+svet.sp <- readOGR("podatki/TM_WORLD_BORDERS-0.3.shp", "TM_WORLD_BORDERS-0.3" )
+svet.sp <- gBuffer(svet.sp, byid = TRUE, width = 0)
+
+svet.sp <- sp.na.omit(svet.sp, margin=1)
+svet.map <- svet.sp %>% spTransform(CRS("+proj=longlat +datum=WGS84"))
+
+svet.poligoni = svet.map %>% fortify() %>%
+  left_join(
+    rownames_to_column(svet.map@data),
+    by = c("id" = "rowname")
+  ) %>%
+  select(
+    drzava = NAME, long, lat, order, hole, piece, id, group
+  ) %>%
+  mutate(
+    drzava = replace(
+      drzava,
+      drzava == "The former Yugoslav Republic of Macedonia",
+      "North Macedonia"
+    )
+  )
+
+svet.poligoni %>% write_csv("podatki/drzave-poligoni.csv")
+
+svet.centroidi = svet.map %>% coordinates() %>% as.data.frame()
+colnames(svet.centroidi) = c("long", "lat")
+
+svet.centroidi = rownames_to_column(svet.centroidi) %>%
+  left_join(
+    rownames_to_column(svet.map@data),
+    by = "rowname"
+  ) %>%
+  select(
+    drzava = NAME, long = LON, lat = LAT
+  ) %>%
+  mutate(
+    drzava = replace(
+      drzava,
+      drzava == "The former Yugoslav Republic of Macedonia",
+      "North Macedonia"
+    )
+  )
+svet.centroidi %>% write_csv("zemljevidi/svet/drzave-centroidi.csv")
+
+svet.centroidi = read_csv("podatki/drzave-centroidi.csv")
+evropske.drzave = tibble(
+  drzava = c(
+    "Albania", "Andorra", "Armenia",
+    "Austria", "Azerbaijan", "Belarus",
+    "Belgium", "Bosnia and Herzegovina",
+    "Bulgaria", "Croatia", "Cyprus",
+    "Czechia", "Denmark", "Estonia",
+    "Finland", "France", "Georgia",
+    "Germany", "Greece", "Hungary",
+    "Iceland", "Ireland", "Italy",
+    "Kazakhstan", "Latvia",
+    "Liechtenstein", "Lithuania",
+    "Luxembourg", "Malta", "Moldova",
+    "Monaco", "Montenegro",
+    "Netherlands", "North Macedonia",
+    "Norway", "Poland", "Portugal",
+    "Romania", "Russia", "San Marino",
+    "Serbia", "Slovakia", "Slovenia",
+    "Spain", "Sweden", "Switzerland",
+    "Turkey", "Ukraine", "United Kingdom",
+    "Holy See (Vatican City)"
+  )
+)
+
+
+evropa.izsek = as(extent(-25, 60, 30, 75), "SpatialPolygons")
+sp::proj4string(evropa.izsek) <- sp::proj4string(svet.sp)
+
+
+evropske.drzave = tibble(
+  drzava = c(
+    "Albania", "Andorra", "Armenia",
+    "Austria", "Azerbaijan", "Belarus",
+    "Belgium", "Bosnia and Herzegovina",
+    "Bulgaria", "Croatia", "Cyprus",
+    "Czechia", "Denmark", "Estonia",
+    "Finland", "France", "Georgia",
+    "Germany", "Greece", "Hungary",
+    "Iceland", "Ireland", "Italy",
+    "Kazakhstan", "Latvia",
+    "Liechtenstein", "Lithuania",
+    "Luxembourg", "Malta", "Moldova",
+    "Monaco", "Montenegro",
+    "Netherlands", "North Macedonia",
+    "Norway", "Poland", "Portugal",
+    "Romania", "Russia", "San Marino",
+    "Serbia", "Slovakia", "Slovenia",
+    "Spain", "Sweden", "Switzerland",
+    "Turkey", "Ukraine", "United Kingdom",
+    "Holy See (Vatican City)"
+  )
+)
+
+# Evropa se po zemljepisni dolžini razteza
+# od -25 do 60, po širini pa od 30 do 75
+evropa.izsek = as(extent(-25, 60, 30, 75), "SpatialPolygons")
+sp::proj4string(evropa.izsek) <- sp::proj4string(svet.sp)
+colnames(evropske.drzave)[1] <- "NAME"
+
+evropa.poligoni = svet.sp %>% crop(evropa.izsek) %>% fortify() %>% tibble() %>%
+  left_join(
+    evropske.drzave,
+    by = "NAME"
+  )
+
+colnames(svet.centroidi)[1] <- "NAME"
+
+evropa.centroidi = evropske.drzave %>%
+  left_join(
+    svet.centroidi,
+    by = "NAME"
+  )
+
+
+colnames(evropa.poligoni)[12] <- "drzava"
+colnames(evropa.centroidi)[1] <- "drzava"
 
 
 
+prostorski.diagram.skupine = function(drzave, skupine, k) {
+  drzave %>%
+    bind_cols(skupine) %>%
+    dplyr::select(drzava = ...1, skupina = ...2) %>%
+    left_join(
+      evropa.poligoni,
+      by = "drzava"
+    ) %>%
+    ggplot() +
+    geom_polygon(
+      mapping = aes(long, lat, group = group, fill = skupina),
+      color = "grey"
+    ) +
+    scale_fill_brewer() +
+    coord_map() +
+    xlim(-25, 50) +
+    theme_classic() +
+    theme(
+      axis.line = element_blank(),
+      axis.ticks = element_blank(),
+      axis.text = element_blank(),
+      axis.title = element_blank()
+    )
+}
 
+set.seed(42)
+skupine = nakupi[, -1] %>%
+  kmeans(centers = 2) %>%
+  getElement("cluster") %>%
+  as.ordered()
 
+z1 <- prostorski.diagram.skupine(Drzave, skupine, 2)
+
+k = dendrogram %>%
+  hc.kolena %>%
+  hc.kolena.k() %>%
+  getElement(1)
+
+skupine = dendrogram %>%
+  cutree(k = 4) %>%
+  as.ordered()
+
+z2<- prostorski.diagram.skupine(Drzave, skupine, k)
 
 
 
