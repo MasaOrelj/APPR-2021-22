@@ -19,15 +19,27 @@ source("lib/libraries.r", encoding="UTF-8")
 
 ## Izbira teme
 
-Za projekt sem si izbrala temo **Analiza turizma v Evropski Uniji**. 
+Za projekt sem si izbrala temo **Analiza turizma v Evropski Uniji**. Posvetila sem se analizi sodelovanja prebivalcev posameznih držav v turizmu, ga povezala z lokacijo potovanja, spolom in izobrazbo. Nato sem preučila potrošnjo in količino opravljenih izletov, za konec pa sem še
+raziskala povezavo turizma s povprečno neto plačo. 
 
 ## Obdelava, uvoz in čiščenje podatkov
 
 ```{r uvoz}
 source("uvoz/uvoz.r", encoding="UTF-8")
 ```
+Podatke za analizo sem črpala iz csv tabel Eurostata in pa html tabele iz Wikipedije. Zbrala sem jih v tri glavne tabele, ki sem jih kasneje uporabljala pri analizi. 
 
-***
+**tablela_izobrazba_sodelovanje** predstavlja delež sodelujočih ljudi v turizmu po posameznih državah in stopnjo izobraženosti. V tabelo sem zajela podatke vseh držav EU od leta 2012 do 2020.
+Stolpci: Leto, Država, Spol, Odstotek sodelujočih v turizmu znotraj države, Odstotek sodelujočih v turizmu izven države, Odstotek vseh sodelujočih, Odstotek ljudi s primarno izobrazbo, Odstotek ljudi s sekundarno izobrazbo, Odstotek ljudi s terciarno izobrazbo.
+
+**tabela_potrosnja_izleti** prikazuje potrošnjo in število izletov(ena nočitev ali več) prebivalcev po državah. V tabelo sem zajela podatke vseh držav EU od leta 2012 do 2019.
+Stolpci: Leto, Država, Namen, Lokacija, Število potovanje, Povprečna potrošnjan na izlet, Povprečna potrošnja na noč, Skupna potrošnja.
+
+**tabela_place_potrosnja** prikazuje povprečno neto plačo in povprečno potrošnjo na noč oz. na izlet v državah EU. Ker iz html tabele nisem dobila podatkov za vse države EU, sem jih vključila le 22, zajela pa sem podatke med leti 2012 in 2018.
+
+Pri vizualizaciji sem uporabila še dve manjši tabeli:
+**Potovanja.Skupaj** prikazuje število potovanj vseh članic EU skupaj od leta 2012 do 2019.
+**Potrošnja.Skupaj** prikazuje skupno potrošnjo v turizmu vseh članic EU od leta 2012 do 2019.
 
 ## Analiza in vizualizacija podatkov
 
@@ -35,7 +47,69 @@ source("uvoz/uvoz.r", encoding="UTF-8")
 source("vizualizacija/vizualizacija.r", encoding="UTF-8")
 ```
 
-***
+```{r graf1, echo=FALSE, fig.align='center', fig.height = 7}
+graf1
+```
+
+```{r graf2, echo=FALSE, fig.align='center', fig.height = 7}
+graf2
+```
+Za začetek, sem želela analizirati vpliv spola na sodelovanje v turizmu med visoko in nizko izobraženimi med leti 2012 in 2020. Izmed držav EU sem izbrala 6 držav z najvišjo (graf1) in 6 z najnižjo (graf2) stopnjo terciarne izobrazbe. Razvidno je, da se tako pri prvem kot pri drugem naboru držav udeležba ljudi v turizmu med moškimi in ženskami pretirano ne razlikuje. Razlike so med grafoma opazne le v višini odstotka udeleženih, čemur se bom posvetila tudi v enem od naslednjih grafov.
+
+```{r graf3, echo=FALSE, fig.align='center', fig.height = 7}
+graf3
+```
+Graf na bolj nazoren način prikazuje, da spol ni pomemben faktor pri sodelovanju v turizmu.
+
+
+
+
+
+```{r graf4, echo=FALSE, fig.align='center', fig.height = 7}
+graf4
+```
+
+
+```{r graf5, echo=FALSE, fig.align='center', fig.height = 7}
+graf5
+```
+
+Grafa prikazujeta sodelovanje v turizmu med visoko (graf4) in nizko (graf5) izobraženimi državami glede na lokacijo med leti 2012 in 2020. Države sem izbrala enako kot pri prvih dveh grafih. Razvidno je, da stopnja izobrazbe vpliva na lokacijo potovanja. V državah z višje izobraženim prebivalstvom je namreč večji odstotek ljudi, ki potujejo tudi v tujino, v državah z nižje izobraženimi pa je turizem znotraj države po večini veliko bolj pogost, kot turizem v tujini.
+
+Potrebno je poudariti, da so med sodelujoče v turizmu izven države šteti vsi prebivalci, ki so se udeležili turizma v tujini, ob tem pa so se lahko udeležili tudi turizma znotraj države.
+
+
+
+
+```{r graf6, echo=FALSE, fig.align='center', fig.height = 7}
+graf6
+```
+Na grafu je prikazana skupna potrošnja v državah EU od leta 2012 do 2019. Potrošnja se skozi prva štiri leta ne spreminja veliko, veliko povečanje pa je opazno med leto 2015-2018.
+
+```{r graf7, echo=FALSE, fig.align='center', fig.height = 7}
+graf7
+```
+Na grafu je prikazano skupno število potovanj v državah EU od leta 2012 do 2019. Povečini potovanja naraščajo, še posebaj pa je opazen skok med leti 2015-2018.
+
+
+
+
+```{r graf8, echo=FALSE, fig.align='center', fig.height = 7}
+graf8
+```
+Graf prikazuje povezava med povprečno neto plačo in potrošnjo v turizmu v EU. Plačo sem primerjala s povprečno potrošnjo na izlet in povprečno potrošnjo na noč. Iz grafa lahko sklepamo, da ljudje ob višjih plačah več trošijo v turizmu.
+
+ 
+```{r graf9, echo=FALSE, fig.align='center', fig.height = 7}
+graf9
+```
+Kot sem že prej omenila sem raziskala tudi vpliv izobrazbe na sodelovanje v turizmu. Iz grafa je razvidno, da z visoko izobrazbo narašča tudi zanimanje za turizem.
+
+
+```{r zemljevid, echo=FALSE, fig.align='center', fig.width = 12, fig.height = 10}
+zemljevid
+```
+Na zemljevidu so prikazane države EU glede na odstotek sodelujočih v turizmu leta 2020.
 
 ## Napredna analiza podatkov
 
