@@ -211,18 +211,8 @@ graf9
 
 #Zemljevid odstotka sodelujočih v turizmu v državah EU leta 2020
 
-library(rgdal)
-library(rgeos)
-library(raster)
-library(tmap)
-library(sp)
-library(sf)
-library(rnaturalearth)
-library(rnaturalearthdata)
 
-source("lib/uvozi.zemljevid.r", encoding="UTF-8")
-
-Data(World) 
+data(World) 
 Europe <- World %>% filter(continent == "Europe")
 
 lvls <- (Europe$name)
@@ -278,7 +268,7 @@ zemljevid <- podatki %>% ggplot() +
     axis.title = element_blank()
   )+
   geom_sf_text(aes(label = name), color = "black", size = 2)
-
+zemljevid
 
 
 
