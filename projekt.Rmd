@@ -27,7 +27,7 @@ raziskala povezavo turizma s povprečno neto plačo.
 ```{r uvoz}
 source("uvoz/uvoz.r", encoding="UTF-8")
 ```
-Podatke za analizo sem črpala iz csv tabel Eurostata in pa html tabele iz Wikipedije. Zbrala sem jih v tri glavne tabele, ki sem jih kasneje uporabljala pri analizi. 
+Podatke za analizo sem črpala iz csv tabel Eurostata in pa html tabele iz Wikipedie. Zbrala sem jih v tri glavne tabele, ki sem jih kasneje uporabljala pri analizi. 
 
 **tablela_izobrazba_sodelovanje** predstavlja delež sodelujočih ljudi v turizmu po posameznih državah in stopnjo izobraženosti. V tabelo sem zajela podatke vseh držav EU od leta 2012 do 2020.
 Stolpci: Leto, Država, Spol, Odstotek sodelujočih v turizmu znotraj države, Odstotek sodelujočih v turizmu izven države, Odstotek vseh sodelujočih, Odstotek ljudi s primarno izobrazbo, Odstotek ljudi s sekundarno izobrazbo, Odstotek ljudi s terciarno izobrazbo.
@@ -36,6 +36,7 @@ Stolpci: Leto, Država, Spol, Odstotek sodelujočih v turizmu znotraj države, O
 Stolpci: Leto, Država, Namen, Lokacija, Število potovanje, Povprečna potrošnjan na izlet, Povprečna potrošnja na noč, Skupna potrošnja.
 
 **tabela_place_potrosnja** prikazuje povprečno neto plačo in povprečno potrošnjo na noč oz. na izlet v državah EU. Ker iz html tabele nisem dobila podatkov za vse države EU, sem jih vključila le 22, zajela pa sem podatke med leti 2012 in 2018.
+Stolpci: Leto, Država, Plača, Povprečna potrošnja na izlet, Povprečna potrošnja na noč
 
 Pri vizualizaciji sem uporabila še dve manjši tabeli:
 **Potovanja.Skupaj** prikazuje število potovanj vseh članic EU skupaj od leta 2012 do 2019.
