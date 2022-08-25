@@ -35,8 +35,8 @@ graf1 <- tabela_izobrazba_sodelovanje %>%
   
   facet_wrap(. ~ Drzava, ncol = 3) +
   coord_cartesian(ylim = c(20,100))
+graf1 <- ggplotly(graf1)
 
-graf1
 
 #Sodelovanje v turizmu med nizko izobraženimi državami glede na spol
 
@@ -62,8 +62,9 @@ graf2 <- tabela_izobrazba_sodelovanje %>%
   
   facet_wrap(. ~ Drzava, ncol = 3) +
   coord_cartesian(ylim = c(20, 100))
+graf2 <- ggplotly(graf2)
 
-graf2
+
 
 #Dokaz, da spol ni pomemben faktor v sodelovanju v turizmu
 
@@ -77,7 +78,7 @@ graf3 <- tabela_izobrazba_sodelovanje %>%
     y = "Odstotek vseh sodelujočih",
     title = "Povezava med sodelovanjem v turizmu in spolom v državah EU"
   )
-ggplotly(graf3)
+graf3 <- ggplotly(graf3)
 
 
 #Sodelovanje v turizmu med visoko izobraženimi državami glede na lokacijo
@@ -98,10 +99,12 @@ graf4 <- tabela_izobrazba_sodelovanje %>% filter(Spol == "Total", Drzava %in% Dr
   labs(
     x = "Leto",
     y = "Odstotek",
-    title = "Sodelovanje v turizmu med visoko izobraženimi državami glede na lokacijo") 
+    title = "Sodelovanje v turizmu med visoko izobraženimi državami glede na lokacijo",
+    color = "Legenda") +
+  scale_color_manual(values = colors)
   
   
-ggplotly(graf4)
+graf4 <- ggplotly(graf4)
 
 #Sodelovanje v turizmu med nizko izobraženimi državami glede na lokacijo
 colors1 <- c("Znotraj države" = "blue", "Izven države" = "green", "Skupaj" = "red")
@@ -117,7 +120,7 @@ graf5 <- tabela_izobrazba_sodelovanje %>% filter(Spol == "Total", Drzava %in% Dr
     x = "Leto",
     y = "Odstotek",
     title = "Sodelovanje v turizmu med nizko izobraženimi državami glede na lokacijo",
-    color = "Legend"
+    color = "Legenda"
   ) +
   theme_classic() +
   theme(
@@ -126,7 +129,7 @@ graf5 <- tabela_izobrazba_sodelovanje %>% filter(Spol == "Total", Drzava %in% Dr
   )+
   scale_color_manual(values = colors1)
 
-ggplotly(graf5)
+graf5 <- ggplotly(graf5)
 
 
 
@@ -143,7 +146,8 @@ graf6 <- Potrosnja.Skupaj%>%
   stat_summary(geom ="line",
                fun = mean,
                size = 1)
-ggplotly(graf6)
+graf6 <- ggplotly(graf6)
+graf6
 
 #Skupno število potovanj v državah EU od leta 2012 do 2019
 graf7 = Potovanja.Skupaj %>%
@@ -152,7 +156,7 @@ graf7 = Potovanja.Skupaj %>%
   ) +
   labs(
     x = "Leto",
-    y = "Skupno število potovanj",
+    y = "Skupno število potovanj (v milijonih)",
     title = "Skupno število potovanj držav EU"
   ) +
   theme_light() +
@@ -160,10 +164,13 @@ graf7 = Potovanja.Skupaj %>%
     axis.text.x = element_text(angle = 45, vjust = 0.5),
     axis.title.x = element_text(vjust = 0)
   )+
-  geom_line(color='light blue', arrow = arrow(angle = 20), size=2)+
+  geom_line(color='light blue', arrow = arrow(length=unit(0.3,"cm"), type="closed"), size=2)+
   geom_point(size = 2, color='blue')
 
-ggplotly(graf7)
+
+ 
+
+
 
 #Povezava med povprečno neto plačo in potrošnjo v turizmu v EU
 tabela_place_potrosnja <- na.omit(tabela_place_potrosnja)
@@ -182,10 +189,10 @@ graf8 <- tabela_place_potrosnja %>%
     x = "Povprečna neto plača",
     y = "Povprečna potrošnja",
     title = "Povezava med povprečno neto plačo in povprečno potrošnjo na izlet in na noč v turizmu",
-    color = "Legend") +
+    color = "Legenda") +
   scale_color_manual(values = colors)
     
-  ggplotly(graf8)
+graf8 <- ggplotly(graf8)
 
 
 #Povezava med stopnjo visoko izobraženih in sodelujočih v izvendržavnem turizmu
@@ -207,7 +214,7 @@ graf9 <- visokoizobrazeni_sodelovanje %>%
   ) +
   geom_point(size = 3)+
   geom_smooth() 
-graf9
+graf9 <- ggplotly(graf9)
 
 #Zemljevid odstotka sodelujočih v turizmu v državah EU leta 2020
 

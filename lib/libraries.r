@@ -28,6 +28,7 @@ library(maptools)
 library(mapproj)
 library(gridExtra)
 library(spatialEco)
+library(graphics)
 options(gsubfn.engine="R")
 
 

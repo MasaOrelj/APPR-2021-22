@@ -128,6 +128,8 @@ Potovanja.Skupaj <- tabela_potrosnja_izleti %>%
   group_by(Leto) %>%
   summarise(Stevilo.potovanj=sum(Stevilo.potovanj[!is.na(Stevilo.potovanj)]))
 
+Potovanja.Skupaj$Stevilo.potovanj <- Potovanja.Skupaj$Stevilo.potovanj/1000000
+
 Potrosnja.Skupaj <- tabela_potrosnja_izleti %>% 
   group_by(Leto) %>%
   summarise(Skupna.potrosnja=sum(Skupna.potrosnja[!is.na(Skupna.potrosnja)]))
