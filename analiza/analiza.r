@@ -134,7 +134,7 @@ hc.kolena.k = function(k.visina) {
 r = hc.kolena(dendrogram)
 
 
-hierarhično_razvrščanje <- plot(
+hierarhicno_razvrscanje <- plot(
   dendrogram,
   labels = Drzave,
   ylab = "višina",
@@ -162,7 +162,7 @@ diagram.kolena = function(k.visina) {
     theme_classic()
 }
 
-diagram.kolena(r)
+d_kolena <- diagram.kolena(r)
 
 diagram.skupine = function(podatki, oznake, skupine, k) {
   podatki = podatki %>%
@@ -203,9 +203,13 @@ print(skupine)
 r.hc = sodelovanje[, 2:3] %>% obrisi(hc = TRUE)
 r.km = sodelovanje[, 2:3] %>% obrisi(hc = FALSE)
 
-diagram.obrisi(r.hc)
-diagram.obrisi(r.km)
+optimalno.stevilo.skupin <- obrisi.k(r.km)
 
+
+d_obrisi1 <- diagram.obrisi(r.hc)
+d_obrisi1
+d_obrisi2 <- diagram.obrisi(r.km)
+d_obrisi2
 #Optimalno število skupin je torej 2 ali 4/5.
 
 drzave.x.y =
@@ -235,10 +239,17 @@ skupine = sodelovanje[, -1] %>%
   getElement("cluster") %>%
   as.ordered()
 skup <- diagram.skupine(drzave.x.y, drzave.x.y$drzava, skupine, 5)
-skup
 
 
-svet.sp <- readOGR("podatki/TM_WORLD_BORDERS-0.3.shp", "TM_WORLD_BORDERS-0.3" )
+download.file(url='https://kt.ijs.si/~ljupco/lectures/appr/zemljevidi/svet/TM_WORLD_BORDERS-0.3.shp',
+              destfile='TM_WORLD_BORDERS-0.3.shp', method='curl')
+download.file(url='https://kt.ijs.si/~ljupco/lectures/appr/zemljevidi/svet/TM_WORLD_BORDERS-0.3.dbf',
+              destfile='TM_WORLD_BORDERS-0.3.dbf', method='curl')
+download.file(url='https://kt.ijs.si/~ljupco/lectures/appr/zemljevidi/svet/TM_WORLD_BORDERS-0.3.shx',
+              destfile='TM_WORLD_BORDERS-0.3.shx', method='curl')
+svet.sp <- readOGR(getwd(), "TM_WORLD_BORDERS-0.3")
+
+
 svet.sp <- gBuffer(svet.sp, byid = TRUE, width = 0)
 
 svet.sp <- sp.na.omit(svet.sp, margin=1)
