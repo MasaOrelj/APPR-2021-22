@@ -119,9 +119,14 @@ source("analiza/analiza.r", encoding="UTF-8")
 ```
 Pri napredni analizi sem se najprej lotila razvrščanja v skupine. Za podatke sem izbrala odstotek sodelovanja ljudi v turizmu po posameznih državah Evropske Unije leta 2020.
 
-```{r hierarhicno_razvrscanje, echo=FALSE, fig.align='center'}
-hierarhicno_razvrscanje
-```
+
+hierarhicno_razvrscanje <- plot(
+  dendrogram,
+  labels = Drzave,
+  ylab = "višina",
+  main = NULL
+)
+
 Hierarhično razvrščanje sloni na združevanju manjših skupin držav v večje.
 
 
@@ -143,9 +148,9 @@ V naslednjem koraku, sem želela s pomočjo strojnega učenja in metode prečneg
 
 Čeprav sem prej že prikazala povezavo med visoko stopnjo izobrazbe ter sodelovanjem v izvendržavnem turizmu, sem s pomočjo naslednjega grafa ugotovila, da so podatki o odstotku vseh sodelujočih v turizmu in o terciarni izobrazbi prebivalcev bolj povezani.
 
-```{r povezave, echo=FALSE, fig.align='center'}
-povezave
-```
+povezave <- ggpairs(tabela_napovedovanje)
+print(povezave)
+
 
 
 ```{r graf_precno_preverjanje, echo=FALSE, fig.align='center'}
