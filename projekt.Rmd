@@ -117,8 +117,52 @@ Na zemljevidu so prikazane države EU glede na odstotek sodelujočih v turizmu l
 ```{r analiza}
 source("analiza/analiza.r", encoding="UTF-8")
 ```
+Pri napredni analizi sem se najprej lotila razvrščanja v skupine. Za podatke sem izbrala odstotek sodelovanja ljudi v turizmu po posameznih državah Evropske Unije leta 2020.
 
-***
+```{r hierarhicno_razvrscanje, echo=FALSE, fig.align='center'}
+hierarhicno_razvrscanje
+```
+Hierarhično razvrščanje sloni na združevanju manjših skupin držav v večje.
+
+
+```{r d_kolena, echo=FALSE, fig.align='center'}
+d_kolena
+```
+Diagram prikazuje spreminjanje razdalje med skupinami v vsakem koraku združevanja, z modro pa so označena kolena. V tem primeru so kolena na mestih 3, 4, 6, 8, 11, 12, 16, 18, 19 in 21.
+
+
+
+
+Diagram s škatlami ponazori porazdelitve vrednosti obrisov za vse primere za različne vrednosti števila skupin k. Rdeče pike in črta ponazorijo spremembe povprečij obrisov s spreminjanjem števila skupin. Modra pika pa ustreza optimalnemu številu skupin. Na diagramih je optimalno število skupin k=2 in k=4, zato bom v nadaljevanju prikazala porazdelitev v 2 in 4 skupine.
+
+
+
+
+
+V naslednjem koraku, sem želela s pomočjo strojnega učenja in metode prečnega preverjanja poiskati model, ki bi se dobro prilegal podatkom.
+
+Čeprav sem prej že prikazala povezavo med visoko stopnjo izobrazbe ter sodelovanjem v izvendržavnem turizmu, sem s pomočjo naslednjega grafa ugotovila, da so podatki o odstotku vseh sodelujočih v turizmu in o terciarni izobrazbi prebivalcev bolj povezani.
+
+```{r povezave, echo=FALSE, fig.align='center'}
+povezave
+```
+
+
+```{r graf_precno_preverjanje, echo=FALSE, fig.align='center'}
+graf_precno_preverjanje
+```
+Z metodo prečnega preverjanja sem želela poiskati model, ki bi se dobro prilegal podatkom. Preizkusila sem modele do vključno stopnje pet in izbrala tistega z najmanjšo kvadratno napako. Na grafu je prikazano gibanje spremenljivke odstotek vseh sodelujočih v odvisnosti od spremenljivke odstotek prebivalcev s terciarno izobrazbo. 
+
+
+
+S pomočjo strojnega učenja sem želela še napovedati gibanje celotne potrošnje Evopske unije v letu 2020.
+
+```{r napoved_graf, echo=FALSE, fig.align='center'}
+napoved_graf
+```
+Na grafu lahko vidimo že znane podatke o gibanju potrošnje v Evropski Uniji med leti 2012 in 2019, podatek za leto 2020 pa je napoved. Po napovedi naj bibila torej potrošnja leta 2020 približno enaka kot leta 2019.
+
+
 
 ```{r shiny}
 #shinyAppDir("shiny", options=list(width="100%", height=600))
