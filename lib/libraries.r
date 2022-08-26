@@ -1,5 +1,4 @@
 library(tidyverse)
-library(plyr)
 library(xml2)
 library(plotly)
 library(tmap)
