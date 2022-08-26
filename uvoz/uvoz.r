@@ -126,13 +126,13 @@ tabela_potrosnja_izleti$Drzava[tabela_potrosnja_izleti$Drzava == "Germany (until
 
 Potovanja.Skupaj <- tabela_potrosnja_izleti %>% 
   group_by(Leto) %>%
-  summarise(Stevilo.potovanj=sum(Stevilo.potovanj[!is.na(Stevilo.potovanj)]))
+  summarize(Stevilo.potovanj=sum(Stevilo.potovanj[!is.na(Stevilo.potovanj)]))
 
 Potovanja.Skupaj$Stevilo.potovanj <- Potovanja.Skupaj$Stevilo.potovanj/1000000
 
 Potrosnja.Skupaj <- tabela_potrosnja_izleti %>% 
   group_by(Leto) %>%
-  summarise(Skupna.potrosnja=sum(Skupna.potrosnja[!is.na(Skupna.potrosnja)]))
+  summarize(Skupna.potrosnja=sum(Skupna.potrosnja[!is.na(Skupna.potrosnja)]))
   
 
 Potrosnja.Skupaj$Skupna.potrosnja <- Potrosnja.Skupaj$Skupna.potrosnja/1000000
