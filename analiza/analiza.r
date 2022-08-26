@@ -41,7 +41,7 @@ obrisi.povprecje = function(k.obrisi) {
 obrisi.k = function(k.obrisi) {
   obrisi.povprecje(k.obrisi) %>%
     filter(obrisi == max(obrisi)) %>%
-    summarize(k = min(k)) %>%
+      summarize(k = min(k)) %>%
     unlist() %>%
     as.character() %>%
     as.integer()
@@ -163,6 +163,7 @@ diagram.kolena = function(k.visina) {
 }
 
 d_kolena <- diagram.kolena(r)
+d_kolena
 
 diagram.skupine = function(podatki, oznake, skupine, k) {
   podatki = podatki %>%
@@ -203,7 +204,6 @@ print(skupine)
 r.hc = sodelovanje[, 2:3] %>% obrisi(hc = TRUE)
 r.km = sodelovanje[, 2:3] %>% obrisi(hc = FALSE)
 
-optimalno.stevilo.skupin <- obrisi.k(r.km)
 
 
 d_obrisi1 <- diagram.obrisi(r.hc)
@@ -418,9 +418,123 @@ skupine = dendrogram %>%
 z2<- prostorski.diagram.skupine(Drzave, skupine, k)
 
 
+###########################PRECNO.PREVERJANJE#############################
+
+#Napovedali bomo vrednost spremenljivke Odstotek.vseh.sodelujocih na podlagi spremenljivke Tertiary.education
+
+tabela_napovedovanje <- tabela_izobrazba_sodelovanje %>% filter(Spol == "Total", Leto %in% c(2017,2018,2019)) %>%
+  dplyr::select(Odstotek.sodelujocih.izven.drzave, Odstotek.vseh.sodelujocih, Tertiary.education)
+
+
+povezave <- ggpairs(tabela_napovedovanje)
+
+#Visoka izobrazba je najbolj povezana s skupnim odstotokom vseh sodelujočih v turizmu
+
+
+gg <- ggplot(tabela_napovedovanje, aes(x=Odstotek.vseh.sodelujocih, y=Tertiary.education)) + geom_point()
+
+
+podatki <- tabela_napovedovanje
+k <- 5
+formula <- Odstotek.vseh.sodelujocih ~ Tertiary.education 
+
+napaka.cv <- function(podatki, k, formula) {
+  n <- nrow(podatki)
+  r <- sample(1:n)
+  
+  razrez <- cut(1:n, k, labels = FALSE)
+  
+  razbitje <- split(r, razrez)
+  
+  pp.napovedi = rep(0, n)
+  for (i in 1:length(razbitje)) {
+    #Naučimo se modela na množici S/Si
+    model = podatki[ -razbitje[[i]], ] %>% lm(formula = formula)
+    #Naučen model uporabimo za napovedi na Si
+    pp.napovedi[ razbitje[[i]] ] = predict(object = model, newdata = podatki[ razbitje [[i]], ] )
+    
+  }
+  
+  #model so učni podatki in ostalo ( razbitje[[i]]) so testni podatki. 
+  
+  napaka <- mean((pp.napovedi - podatki$Odstotek.vseh.sodelujocih)^2)
+  return(napaka)
+}
+napaka.cv(tabela_napovedovanje, 5, formula)
+
+formule <- c(Odstotek.vseh.sodelujocih ~ Tertiary.education ,
+             Odstotek.vseh.sodelujocih ~ Tertiary.education + I(Tertiary.education ^2),
+             Odstotek.vseh.sodelujocih ~ Tertiary.education + I(Tertiary.education ^2) + I(Tertiary.education ^3),
+             Odstotek.vseh.sodelujocih ~ Tertiary.education  + I(Tertiary.education ^2) + I(Tertiary.education ^3) + I(Tertiary.education ^4),
+             Odstotek.vseh.sodelujocih ~ Tertiary.education + I(Tertiary.education ^2) + I(Tertiary.education ^3) + I(Tertiary.education ^4) + I(Tertiary.education ^5))
+napake <- rep(0, 5)
+for (i in 1:5){
+  formula <- formule[[i]]
+  napaka <- napaka.cv(tabela_napovedovanje, 5, formula)
+  napake[i] <- napaka
+}
+which.min(napake)
+model <- lm(data = tabela_napovedovanje, formula = Odstotek.vseh.sodelujocih ~ Tertiary.education + I(Tertiary.education ^2) + I(Tertiary.education ^3) + I(Tertiary.education ^4) + I(Tertiary.education ^5))
+
+graf_precno_preverjanje <- ggplot(tabela_napovedovanje, aes(x= Tertiary.education, y=Odstotek.vseh.sodelujocih)) +  geom_point() + geom_smooth(formula = y ~ x + x^2 + x^3 + x^4 + x^5,
+                                                                                   se = FALSE, fullrange = TRUE, color = "green")
+
+
+########################################NAPOVEDOVANJE#####################################
+#Napovedovanje potrosnje v EU
+
+tabela_napoved_potrosnja <- Potrosnja.Skupaj
+names(tabela_napoved_potrosnja)[2] <- "potrosnja"
+
+zamakni <- function(x, n){c(rep(NA, n), x)[1:length(x)]}
+
+naredi.df <- function(x){
+  data.frame(potrosnja = x,
+             potrosnja1 = zamakni(x, 1),
+             potrosnja2 = zamakni(x, 2),
+             potrosnja3 = zamakni(x, 3),
+             potrosnja4 = zamakni(x, 4),
+             potrosnja5 = zamakni(x, 5),
+             potrosnja6 = zamakni(x, 6)
+             )
+}
+
+df2 <- naredi.df(tabela_napoved_potrosnja$potrosnja)
+model1 = ranger(formula = potrosnja ~ ., data = df2 %>% drop_na())
+
+n = nrow(df2)
+
+df3 <- naredi.df(c(tabela_napoved_potrosnja$potrosnja, NA))
+napoved1 <- predict(model1, data = df3[n+1,])$predictions
+df3[n+1,1] = napoved1
 
 
 
+novi_stolpec <- df3 %>% dplyr::select(potrosnja)
+df4 <- naredi.df(novi_stolpec$potrosnja)
+model2 = ranger(formula = potrosnja ~ ., data = df4 %>% drop_na())
+
+n = nrow(df4)
+
+df5 <- naredi.df(c(novi_stolpec$potrosnja, NA))
+napoved2 <- predict(model2, data = df5[n+1,])$predicitions
+df5[n+1,1] <- napoved2
+
+Leto <- c(2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021)
+
+pricakovanje <- as_tibble(data.frame(
+  Leto,
+  df5$potrosnja))
+
+
+napoved.graf <- ggplot(pricakovanje) + geom_line(mapping = aes(x = Leto, y = df5.potrosnja), color = "red")+
+  geom_line(mapping = aes(x = Leto, y = df5.potrosnja, color = Leto ), show.legend = FALSE)+
+  labs(
+    x = "Leto",
+    y = "Skupna potrošnja držav EU (v milijonih)",
+    title = "Gibanje skupne potrošnje držav EU med leti 2012 in 2021"
+  )
+napoved.graf
 
 
 
