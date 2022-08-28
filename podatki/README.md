@@ -19,7 +19,7 @@ Stolpci: Leto, Država, Spol, Odstotek sodelujočih v turizmu znotraj države, O
 * `2. tabela` : Vsebuje podatke o potrošnji v turizmu in številu izletov držav Evropske Unije. 
 Stolpci: Leto, Država, Namen, Lokacija, Število potovanje, Povprečna potrošnjan na izlet, Povprečna potrošnja na noč, Skupna potrošnja.
 
-* `3. tabela` : Vsbuje podatke o povprečni neto plači in povprečnipotrošnji na noč/izlet.
+* `3. tabela` : Vsebuje podatke o povprečni neto plači in povprečni potrošnji na noč/izlet.
 Stolpci: Leto, Država, Plača, Povprečna potrošnja na izlet, Povprečna potrošnja na noč
 
 Vhodne podatke za naštete tabele bom pridobila iz CSV datotek in ene html datoteke.

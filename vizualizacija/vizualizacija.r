@@ -17,7 +17,7 @@ graf1 <- tabela_izobrazba_sodelovanje %>%
   filter(Drzava %in% Drzave1$Drzava) %>%
   
   ggplot(
-    mapping = aes(x = Leto, y = Odstotek.vseh.sodelujocih , color = Spol)
+    mapping = aes(x = Leto, y = Odstotek.vseh.sodelujocih , color = Spol, shape = Spol, linetype = Spol)
   ) +
   labs(
     x = "Leto",
@@ -29,9 +29,8 @@ graf1 <- tabela_izobrazba_sodelovanje %>%
     axis.text.x = element_text(angle = 45, vjust = 0.5),
     axis.title.x = element_text(vjust = 0)
   )+
-  geom_line(aes(linetype = Spol)) +
+  geom_line() +
   geom_point()+
-  scale_linetype_manual(values=c("solid", "solid","twodash")) +
   
   facet_wrap(. ~ Drzava, ncol = 3) +
   coord_cartesian(ylim = c(20,100))
@@ -44,7 +43,7 @@ graf2 <- tabela_izobrazba_sodelovanje %>%
   filter(Drzava %in% Drzave2$Drzava) %>%
   
   ggplot(
-    mapping = aes(x = Leto, y = Odstotek.vseh.sodelujocih , color = Spol)
+    mapping = aes(x = Leto, y = Odstotek.vseh.sodelujocih , color = Spol, shape = Spol, linetype = Spol)
   ) +
   labs(
     x = "Leto",
@@ -56,9 +55,8 @@ graf2 <- tabela_izobrazba_sodelovanje %>%
     axis.text.x = element_text(angle = 45, vjust = 0.5),
     axis.title.x = element_text(vjust = 0)
   )+
-  geom_line(aes(linetype = Spol)) +
+  geom_line() +
   geom_point()+
-  scale_linetype_manual(values=c("solid", "solid","twodash")) +
   
   facet_wrap(. ~ Drzava, ncol = 3) +
   coord_cartesian(ylim = c(20, 100))
@@ -106,6 +104,7 @@ graf4 <- tabela_izobrazba_sodelovanje %>% filter(Spol == "Total", Drzava %in% Dr
   
 graf4 <- ggplotly(graf4)
 
+
 #Sodelovanje v turizmu med nizko izobraženimi državami glede na lokacijo
 colors1 <- c("Znotraj države" = "blue", "Izven države" = "green", "Skupaj" = "red")
 graf5 <- tabela_izobrazba_sodelovanje %>% filter(Spol == "Total", Drzava %in% Drzave2$Drzava) %>%
@@ -147,7 +146,7 @@ graf6 <- Potrosnja.Skupaj%>%
                fun = mean,
                size = 1)
 graf6 <- ggplotly(graf6)
-graf6
+
 
 #Skupno število potovanj v državah EU od leta 2012 do 2019
 graf7 = Potovanja.Skupaj %>%
@@ -168,7 +167,7 @@ graf7 = Potovanja.Skupaj %>%
   geom_point(size = 2, color='blue')
 
 
- 
+
 
 
 
@@ -215,6 +214,7 @@ graf9 <- visokoizobrazeni_sodelovanje %>%
   geom_point(size = 3)+
   geom_smooth() 
 graf9 <- ggplotly(graf9)
+
 
 #Zemljevid odstotka sodelujočih v turizmu v državah EU leta 2020
 
@@ -275,7 +275,8 @@ zemljevid <- podatki %>% ggplot() +
     axis.title = element_blank()
   )+
   geom_sf_text(aes(label = name), color = "black", size = 2)
-zemljevid
+
+
 
 
 
