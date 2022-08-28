@@ -35,7 +35,7 @@ obrisi = function(podatki, hc = TRUE, od = 2, do = NULL) {
 obrisi.povprecje = function(k.obrisi) {
   k.obrisi.povprecje = k.obrisi %>%
     group_by(k) %>%
-    mutate(obrisi = mean(obrisi))
+    summarise(obrisi = mean(obrisi))
 }
 
 obrisi.k = function(k.obrisi) {
@@ -207,9 +207,9 @@ r.km = sodelovanje[, 2:3] %>% obrisi(hc = FALSE)
 
 
 d_obrisi1 <- diagram.obrisi(r.hc)
-d_obrisi1
+
 d_obrisi2 <- diagram.obrisi(r.km)
-d_obrisi2
+
 #Optimalno število skupin je torej 2 ali 4/5.
 
 drzave.x.y =
@@ -223,7 +223,8 @@ skupine = sodelovanje[, -1] %>%
   hclust(method = "ward.D") %>%
   cutree(k = k) %>%
   as.ordered()
-diagram.skupine(drzave.x.y, drzave.x.y$drzava, skupine, k)
+diagram_skup1 <- diagram.skupine(drzave.x.y, drzave.x.y$drzava, skupine, k)
+diagram_skup1
 
 k = obrisi.k(r.km)
 set.seed(42) # ne pozabimo na ponovljivost rezultatov
@@ -231,191 +232,16 @@ skupine = sodelovanje[, -1] %>%
   kmeans(centers = k) %>%
   getElement("cluster") %>%
   as.ordered()
-diagram.skupine(drzave.x.y, drzave.x.y$drzava, skupine, k)
+diagram_skup2 <- diagram.skupine(drzave.x.y, drzave.x.y$drzava, skupine, k)
+diagram_skup2
 
 set.seed(42)
 skupine = sodelovanje[, -1] %>%
-  kmeans(centers = 4) %>%
+  kmeans(centers = 3) %>%
   getElement("cluster") %>%
   as.ordered()
-skup <- diagram.skupine(drzave.x.y, drzave.x.y$drzava, skupine, 4)
-skup
-
-download.file(url='https://kt.ijs.si/~ljupco/lectures/appr/zemljevidi/svet/TM_WORLD_BORDERS-0.3.shp',
-              destfile='TM_WORLD_BORDERS-0.3.shp', method='curl')
-download.file(url='https://kt.ijs.si/~ljupco/lectures/appr/zemljevidi/svet/TM_WORLD_BORDERS-0.3.dbf',
-              destfile='TM_WORLD_BORDERS-0.3.dbf', method='curl')
-download.file(url='https://kt.ijs.si/~ljupco/lectures/appr/zemljevidi/svet/TM_WORLD_BORDERS-0.3.shx',
-              destfile='TM_WORLD_BORDERS-0.3.shx', method='curl')
-svet.sp <- readOGR(getwd(), "TM_WORLD_BORDERS-0.3")
-
-
-svet.sp <- gBuffer(svet.sp, byid = TRUE, width = 0)
-
-svet.sp <- sp.na.omit(svet.sp, margin=1)
-svet.map <- svet.sp %>% spTransform(CRS("+proj=longlat +datum=WGS84"))
-
-svet.poligoni = svet.map %>% fortify() %>%
-  left_join(
-    rownames_to_column(svet.map@data),
-    by = c("id" = "rowname")
-  ) %>%
-  select(
-    drzava = NAME, long, lat, order, hole, piece, id, group
-  ) %>%
-  mutate(
-    drzava = replace(
-      drzava,
-      drzava == "The former Yugoslav Republic of Macedonia",
-      "North Macedonia"
-    )
-  )
-
-svet.poligoni %>% write_csv("podatki/drzave-poligoni.csv")
-
-svet.centroidi = svet.map %>% coordinates() %>% as.data.frame()
-colnames(svet.centroidi) = c("long", "lat")
-
-svet.centroidi = rownames_to_column(svet.centroidi) %>%
-  left_join(
-    rownames_to_column(svet.map@data),
-    by = "rowname"
-  ) %>%
-  select(
-    drzava = NAME, long = LON, lat = LAT
-  ) %>%
-  mutate(
-    drzava = replace(
-      drzava,
-      drzava == "The former Yugoslav Republic of Macedonia",
-      "North Macedonia"
-    )
-  )
-svet.centroidi %>% write_csv("zemljevidi/svet/drzave-centroidi.csv")
-
-svet.centroidi = read_csv("podatki/drzave-centroidi.csv")
-evropske.drzave = tibble(
-  drzava = c(
-    "Albania", "Andorra", "Armenia",
-    "Austria", "Azerbaijan", "Belarus",
-    "Belgium", "Bosnia and Herzegovina",
-    "Bulgaria", "Croatia", "Cyprus",
-    "Czechia", "Denmark", "Estonia",
-    "Finland", "France", "Georgia",
-    "Germany", "Greece", "Hungary",
-    "Iceland", "Ireland", "Italy",
-    "Kazakhstan", "Latvia",
-    "Liechtenstein", "Lithuania",
-    "Luxembourg", "Malta", "Moldova",
-    "Monaco", "Montenegro",
-    "Netherlands", "North Macedonia",
-    "Norway", "Poland", "Portugal",
-    "Romania", "Russia", "San Marino",
-    "Serbia", "Slovakia", "Slovenia",
-    "Spain", "Sweden", "Switzerland",
-    "Turkey", "Ukraine", "United Kingdom",
-    "Holy See (Vatican City)"
-  )
-)
-
-
-evropa.izsek = as(extent(-25, 60, 30, 75), "SpatialPolygons")
-sp::proj4string(evropa.izsek) <- sp::proj4string(svet.sp)
-
-
-evropske.drzave = tibble(
-  drzava = c(
-    "Albania", "Andorra", "Armenia",
-    "Austria", "Azerbaijan", "Belarus",
-    "Belgium", "Bosnia and Herzegovina",
-    "Bulgaria", "Croatia", "Cyprus",
-    "Czechia", "Denmark", "Estonia",
-    "Finland", "France", "Georgia",
-    "Germany", "Greece", "Hungary",
-    "Iceland", "Ireland", "Italy",
-    "Kazakhstan", "Latvia",
-    "Liechtenstein", "Lithuania",
-    "Luxembourg", "Malta", "Moldova",
-    "Monaco", "Montenegro",
-    "Netherlands", "North Macedonia",
-    "Norway", "Poland", "Portugal",
-    "Romania", "Russia", "San Marino",
-    "Serbia", "Slovakia", "Slovenia",
-    "Spain", "Sweden", "Switzerland",
-    "Turkey", "Ukraine", "United Kingdom",
-    "Holy See (Vatican City)"
-  )
-)
-
-# Evropa se po zemljepisni dolžini razteza
-# od -25 do 60, po širini pa od 30 do 75
-evropa.izsek = as(extent(-25, 60, 30, 75), "SpatialPolygons")
-sp::proj4string(evropa.izsek) <- sp::proj4string(svet.sp)
-colnames(evropske.drzave)[1] <- "NAME"
-
-evropa.poligoni = svet.sp %>% crop(evropa.izsek) %>% fortify() %>% tibble() %>%
-  left_join(
-    evropske.drzave,
-    by = "NAME"
-  )
-
-colnames(svet.centroidi)[1] <- "NAME"
-
-evropa.centroidi = evropske.drzave %>%
-  left_join(
-    svet.centroidi,
-    by = "NAME"
-  )
-
-
-colnames(evropa.poligoni)[12] <- "drzava"
-colnames(evropa.centroidi)[1] <- "drzava"
-
-
-
-prostorski.diagram.skupine = function(drzave, skupine, k) {
-  drzave %>%
-    bind_cols(skupine) %>%
-    dplyr::select(drzava = ...1, skupina = ...2) %>%
-    left_join(
-      evropa.poligoni,
-      by = "drzava"
-    ) %>%
-    ggplot() +
-    geom_polygon(
-      mapping = aes(long, lat, group = group, fill = skupina),
-      color = "grey"
-    ) +
-    scale_fill_brewer() +
-    coord_map() +
-    xlim(-25, 50) +
-    theme_classic() +
-    theme(
-      axis.line = element_blank(),
-      axis.ticks = element_blank(),
-      axis.text = element_blank(),
-      axis.title = element_blank()
-    )
-}
-
-set.seed(42)
-skupine = nakupi[, -1] %>%
-  kmeans(centers = 2) %>%
-  getElement("cluster") %>%
-  as.ordered()
-
-z1 <- prostorski.diagram.skupine(Drzave, skupine, 2)
-
-k = dendrogram %>%
-  hc.kolena %>%
-  hc.kolena.k() %>%
-  getElement(1)
-
-skupine = dendrogram %>%
-  cutree(k = 4) %>%
-  as.ordered()
-
-z2<- prostorski.diagram.skupine(Drzave, skupine, k)
+diagram_skup3 <- diagram.skupine(drzave.x.y, drzave.x.y$drzava, skupine, 3)
+diagram_skup3
 
 
 ###########################PRECNO.PREVERJANJE#############################
@@ -434,7 +260,7 @@ povezave
 
 gg <- ggplot(tabela_napovedovanje, aes(x=Odstotek.vseh.sodelujocih, y=Tertiary.education)) + geom_point()
 
-gg
+
 podatki <- tabela_napovedovanje
 k <- 5
 formula <- Odstotek.vseh.sodelujocih ~ Tertiary.education 
@@ -475,6 +301,7 @@ for (i in 1:5){
   napake[i] <- napaka
 }
 which.min(napake)
+
 model <- lm(data = tabela_napovedovanje, formula = Odstotek.vseh.sodelujocih ~ Tertiary.education + I(Tertiary.education ^2) + I(Tertiary.education ^3) + I(Tertiary.education ^4) + I(Tertiary.education ^5))
 
 graf_precno_preverjanje <- ggplot(tabela_napovedovanje, aes(x= Tertiary.education, y=Odstotek.vseh.sodelujocih)) +  geom_point() + geom_smooth(formula = y ~ x + x^2 + x^3 + x^4 + x^5,
@@ -495,9 +322,7 @@ naredi.df <- function(x){
              potrosnja1 = zamakni(x, 1),
              potrosnja2 = zamakni(x, 2),
              potrosnja3 = zamakni(x, 3),
-             potrosnja4 = zamakni(x, 4),
-             potrosnja5 = zamakni(x, 5),
-             potrosnja6 = zamakni(x, 6)
+             potrosnja4 = zamakni(x, 4)
              )
 }
 
