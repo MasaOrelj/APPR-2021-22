@@ -137,10 +137,29 @@ Diagram prikazuje spreminjanje razdalje med skupinami v vsakem koraku združevan
 
 
 
+```{r d_obrisi1, echo=FALSE, fig.align='center'}
+d_obrisi1
+```
+
+```{r d_obrisi2, echo=FALSE, fig.align='center'}
+d_obrisi2
+```
+
 
 Diagram s škatlami ponazori porazdelitve vrednosti obrisov za vse primere za različne vrednosti števila skupin k. Rdeče pike in črta ponazorijo spremembe povprečij obrisov s spreminjanjem števila skupin. Modra pika pa ustreza optimalnemu številu skupin. Na diagramih je optimalno število skupin k=2 in k=4, zato bom v nadaljevanju prikazala porazdelitev v 2 in 4 skupine.
 
 
+```{r diagram_skup1, echo=FALSE, fig.align='center'}
+diagram_skup1
+```
+Optimalno število skupin: k = 2.
+
+
+
+```{r diagram_skup2, echo=FALSE, fig.align='center'}
+diagram_skup2
+```
+Optimano_število_skupin: k = 4.
 
 
 
@@ -165,7 +184,7 @@ S pomočjo strojnega učenja sem želela še napovedati gibanje celotne potrošn
 ```{r napoved_graf, echo=FALSE, fig.align='center'}
 napoved_graf
 ```
-Na grafu lahko vidimo že znane podatke o gibanju potrošnje v Evropski Uniji med leti 2012 in 2019, podatek za leto 2020 pa je napoved. Po napovedi naj bibila torej potrošnja leta 2020 približno enaka kot leta 2019.
+Na grafu lahko vidimo že znane podatke o gibanju potrošnje v Evropski Uniji med leti 2012 in 2019, podatek za leto 2020 pa je napoved. Po napovedi naj bi bila torej potrošnja leta 2020 bistveno manjša kot leta 2019.
 
 
 
