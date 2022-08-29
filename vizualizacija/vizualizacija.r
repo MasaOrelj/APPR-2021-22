@@ -103,7 +103,7 @@ graf4 <- tabela_izobrazba_sodelovanje %>% filter(Spol == "Total", Drzava %in% Dr
   
   
 graf4 <- ggplotly(graf4)
-
+graf4
 
 #Sodelovanje v turizmu med nizko izobraženimi državami glede na lokacijo
 colors1 <- c("Znotraj države" = "blue", "Izven države" = "green", "Skupaj" = "red")
@@ -276,6 +276,7 @@ zemljevid <- podatki %>% ggplot() +
   )+
   geom_sf_text(aes(label = name), color = "black", size = 2)
 zemljevid
+
 
 
 

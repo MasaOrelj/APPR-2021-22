@@ -9,12 +9,12 @@ fluidPage(
                                     "Lithuania", "Malta", "Hungary", "Netherlands", "Poland", "Portugal", "Romania", "Slovakia", "Finland",
                                     "Sweden"), 
                      selected = "Slovenia")
-         ))
+         ),
   column(9,
          renderPlot({
            narisi.graf(input$drzava)
          })
-  )
+  ))
   
   
   
