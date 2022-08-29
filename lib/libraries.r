@@ -30,6 +30,7 @@ library(mapproj)
 library(gridExtra)
 library(spatialEco)
 library(graphics)
+library(shiny)
 options(gsubfn.engine="R")
 
 

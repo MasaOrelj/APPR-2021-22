@@ -197,5 +197,5 @@ V zadnjem koraku sem ugotovila, da visoka stopnja izobrazbe najbolj vpliva na so
 
 
 ```{r shiny}
-#shinyAppDir("shiny", options=list(width="100%", height=600))
+shinyAppDir("shiny", options=list(width="100%", height=600))
 ```

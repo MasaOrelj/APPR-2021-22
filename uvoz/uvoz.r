@@ -220,3 +220,14 @@ tabela_place_potrosnja <- tabela_place_potrosnja %>%
 
 
 # Glavne tri tabele: tabela_izobrazba_sodelovanje, tabela_potrosnja_izleti, tabela_place_potrosnja, dve pomembni manjsi tabeli sta Potovanja.Skupaj in Potrosnja.Skupaj
+
+
+tabela_shiny <- tabela_stevilo_potovanj %>% pivot_wider(names_from = Namen, values_from = Stevilo.potovanj)
+tabela_shiny$Namen.skupaj <- tabela_shiny$`Personal reasons` + tabela_shiny$`Professional, business`
+tabela_shiny <- tabela_shiny %>% dplyr::select(1,2,3,6) %>% pivot_wider(names_from=Lokacija, values_from = Namen.skupaj)
+colnames(tabela_shiny) <- c("Leto", "Drzava", "Potovanja.znotraj.drzave", "Potovanja.v.tujino")
+
+tabela_shiny$Drzava[tabela_shiny$Drzava == "Germany (until 1990 former territory of the FRG)"] <- "Germany"
+
+
+
