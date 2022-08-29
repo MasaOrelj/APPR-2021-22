@@ -219,8 +219,4 @@ tabela_place_potrosnja <- tabela_place_potrosnja %>%
   left_join(tabela_potrosnja_1, by = c("Drzava", "Leto")) 
 
 
-
-
-
 # Glavne tri tabele: tabela_izobrazba_sodelovanje, tabela_potrosnja_izleti, tabela_place_potrosnja, dve pomembni manjsi tabeli sta Potovanja.Skupaj in Potrosnja.Skupaj
-

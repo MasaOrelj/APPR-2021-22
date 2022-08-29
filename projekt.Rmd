@@ -187,6 +187,14 @@ napoved_graf
 Na grafu lahko vidimo že znane podatke o gibanju potrošnje v Evropski Uniji med leti 2012 in 2019, podatek za leto 2020 pa je napoved. Po napovedi naj bi bila torej potrošnja leta 2020 bistveno manjša kot leta 2019.
 
 
+**Zaključek**
+V mojem projektu sem preučevala turizem v državah Evropske Unije. Pri tem sem ugotovila, da tako potrošnja kot število izletov v EU naraščata, največji preskok za zanimanje v turizmu se je zgodil med leti 2015 do 2018, zadnji dve leti pa se vedno bolj ustaljuje. Prevrila sem tudi vpliv nekaterih spremenljivk na sodelovanje v turizmu in prišla do zaključka, da spol ne igra posebne vloge, saj so moški in ženske enako udeleženi v turizmu, izobrazba po drugi strani, pa predstavlja večji vpliv na dogajanje. Razlika je opazna tako v odstotku sodelujočih prebivalcev kot tudi v izbiri lokacije. Visoko stopnjo izobrazbe lahko namreč povezujemo z večjim zanimanjem za obisk tujih držav. Lotila sem se tudi preučevanja povezave med povprečno neto plačo prebivalcev in povprečno potrošnjo na noč oz. na izlet. Opazno je, da ljudje ob večjih plačah tudi več sredstev namenjajo za udobnejše nastanitve in dražja potovanja.
+
+V napredni analizi sem države razdelila v štiri skupine. Takoje je opazno,da Luxemburg zelo izstopa, saj je zaradi velikosti sodelovanje v znotraj državnem truizmu precej drugačno kot pri večjih državah. Zato je edini možni turizem, turizem v tujini, ki pa je zato v Luxemburgu zelo popularen. 
+S strojnim učenjem, sem prišla do ugotovitve, da bo celotna potrošnja Evropske unije leta 2020 padla. Rezultate bi sicer lahko primerjala z dejanskim stanjem leta 2020, ampak je očitno, da je potrošnja padla tudi zaradi drugih razlogov (Covid), tako, da težko rečem, če so moje napovedi napovedale pravilno.
+V zadnjem koraku sem ugotovila, da visoka stopnja izobrazbe najbolj vpliva na sodelovanje v turizmu na sploh (ne le v tujini), kar bi lahko pomenilo, da bolj izobraženi ljudje kažejo večje zanimanje za spoznavanje drugih delov sveta.
+
+
 
 ```{r shiny}
 #shinyAppDir("shiny", options=list(width="100%", height=600))

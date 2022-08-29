@@ -275,9 +275,7 @@ zemljevid <- podatki %>% ggplot() +
     axis.title = element_blank()
   )+
   geom_sf_text(aes(label = name), color = "black", size = 2)
-
-
-
+zemljevid
 
 
 
