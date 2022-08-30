@@ -11,10 +11,7 @@ fluidPage(
                      selected = "Slovenia")
          ),
   column(9,
-         renderPlot({
-           narisi.graf(input$drzava)
-         })
+         plotlyOutput("graf")
   ))
-  
-  
+
   

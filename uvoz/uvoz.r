@@ -228,6 +228,7 @@ tabela_shiny <- tabela_shiny %>% dplyr::select(1,2,3,6) %>% pivot_wider(names_fr
 colnames(tabela_shiny) <- c("Leto", "Drzava", "Potovanja.znotraj.drzave", "Potovanja.v.tujino")
 
 tabela_shiny$Drzava[tabela_shiny$Drzava == "Germany (until 1990 former territory of the FRG)"] <- "Germany"
-
+tabela_shiny$Potovanja.znotraj.drzave <- tabela_shiny$Potovanja.znotraj.drzave / 1000
+tabela_shiny$Potovanja.v.tujino <- tabela_shiny$Potovanja.v.tujino / 1000
 
 
